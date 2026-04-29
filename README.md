@@ -1,6 +1,8 @@
 # EuroRoute-IO: Sovereign Green Logistics Optimizer
 **EuroRoute-IO** is an API-first demonstration project that optimizes freight logistics across Europe. It calculates routes based on cost, weather risk, and carbon footprint while ensuring that sensitive business data remains entirely within **EU-owned infrastructure**, shielded from non-EU government access.
 
+Goal of this project is focused on both **API integration** and **sovereignty issues** caused by non-EU services. While still using services like AWS Lambda and API Gateway, they were left with the purpose to simulate "partial migration" from those services.
+
 ---
 
 ### 1. Architecture: The Hybrid Sovereign Stack
@@ -22,7 +24,7 @@ This stack uses **AWS** for high-performance, stateless execution and **PolyAPI*
 The following flow describes how **OVHcloud KMS** secures the integration while PolyAPI simplifies the execution.
 
 1.  **Request:** A user sends a shipment request to the **AWS API Gateway**.
-2.  **Secret Retrieval:** **AWS Lambda** authenticates with **OVHcloud KMS** (France) to retrieve the encrypted API keys for the logistics providers.
+2.  **Secret Retrieval:** **AWS Lambda** authenticates with **OVHcloud KMS** to retrieve the encrypted API keys for the logistics providers.
 3.  **Orchestration (PolyAPI Layer):** Lambda passes the credentials into the **PolyAPI Unified SDK**. PolyAPI then concurrently pings:
     * **Logistics APIs:** DHL/FedEx for real-time pricing.
     * **Carbon APIs:** Climatiq for $CO_2$ impact.
@@ -48,9 +50,4 @@ This project is designed to scale horizontally and vertically:
 
 * **API Expansion:** Easily add **Stripe** for payments or **SendGrid** for notifications by simply "cataloging" them in PolyAPI. No need to install new libraries in your Lambda.
 * **Geographic Expansion:** Deploy your database in different EU countries (e.g., **Aiven** in France or Italy) to comply with specific local data residency laws.
-* **Machine Learning:** Use the shipment data stored in your EU database to build an "Arrival Predictor" using **OVHcloud’s AI training platform**.
 * **IoT Integration:** Scale into "Real-time Tracking" by integrating **MQTT/IoT APIs** via PolyAPI webhooks to monitor temperature-sensitive cargo.
-
----
-
-> **Project Vision:** "Move goods across borders without moving data across jurisdictions."
