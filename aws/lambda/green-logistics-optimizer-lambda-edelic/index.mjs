@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 export const handler = async (event) => {
     console.log("Processing request in EU-Central-1 (Frankfurt)...");
     
