@@ -16,7 +16,7 @@ module "api" {
 
 # 2. Include the Lambda Folder
 module "green_logistics_lambda" {
-  source         = "./aws/lambda/green-logistics-optimizer-edelic"
+  source         = "./aws/lambda/green-logistics-optimizer-lambda-edelic"
   # Pass variables needed by the lambda.tf file
   aws_account_id = var.aws_account_id
   api_id         = module.api.api_id
