@@ -1,5 +1,5 @@
-# EuroRoute-IO: Sovereign Green Logistics Optimizer
-**EuroRoute-IO** is an API-first demonstration project that optimizes freight logistics across Europe. It calculates routes based on cost, weather risk, and carbon footprint while ensuring that sensitive business data remains entirely within **EU-owned infrastructure**, shielded from non-EU government access.
+# Sovereign Green Logistics Optimizer
+API-first demonstration project that optimizes freight logistics across Europe. It calculates routes based on cost, weather risk, and carbon footprint while ensuring that sensitive business data remains entirely within **EU-owned infrastructure**, shielded from non-EU government access.
 
 Goal of this project is focused on both **API integration** and **sovereignty issues** caused by non-EU services. While still using services like AWS Lambda and API Gateway, they were left with the purpose to simulate "partial migration" from those services.
 
