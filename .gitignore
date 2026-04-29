@@ -7,7 +7,7 @@
 .terraform.lock.hcl
 
 # Lambda Binaries
-files/*.zip
+aws/files
 node_modules/
 
 # OS/IDE
@@ -17,3 +17,4 @@ node_modules/
 
 # Other
 .env
+.aws/
