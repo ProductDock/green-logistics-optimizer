@@ -51,3 +51,17 @@ This project is designed to scale horizontally and vertically:
 * **API Expansion:** Easily add **Stripe** for payments or **SendGrid** for notifications by simply "cataloging" them in PolyAPI. No need to install new libraries in your Lambda.
 * **Geographic Expansion:** Deploy your database in different EU countries (e.g., **Aiven** in France or Italy) to comply with specific local data residency laws.
 * **IoT Integration:** Scale into "Real-time Tracking" by integrating **MQTT/IoT APIs** via PolyAPI webhooks to monitor temperature-sensitive cargo.
+
+
+### Project setup
+1. Install terraform (Mac)
+```
+brew tap hashicorp/tap
+
+brew install hashicorp/tap/terraform
+```
+
+2. Initialize terraform
+```
+terraform init
+```
