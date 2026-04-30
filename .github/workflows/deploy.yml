@@ -7,7 +7,6 @@ on:
       - 'aws/**'
       - 'main.tf'
 
-# Ensure only one deploy runs at a time to prevent state locking issues
 concurrency:
   group: terraform
   cancel-in-progress: false
@@ -15,7 +14,6 @@ concurrency:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    # Setting env at the job level avoids repeating it for every step
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -27,23 +25,38 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Ensure Backend Bucket Exists
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          # Create bucket if it doesn't exist, ignore error if it does
-          aws s3api create-bucket \
-            --bucket green-logistics-optimizer-state-storage-edelic \
-            --region eu-central-1 \
-            --create-bucket-configuration LocationConstraint=eu-central-1 || true
-          
-          # Enable versioning for state safety
-          aws s3api put-bucket-versioning \
-            --bucket green-logistics-optimizer-state-storage-edelic \
-            --versioning-configuration Status=Enabled || true
+          echo "Checking for S3 bucket..."
+          if ! aws s3api head-bucket --bucket green-logistics-optimizer-state-storage-edelic 2>/dev/null; then
+            echo "Bucket does not exist. Creating..."
+            aws s3api create-bucket \
+              --bucket green-logistics-optimizer-state-storage-edelic \
+              --region eu-central-1 \
+              --create-bucket-configuration LocationConstraint=eu-central-1
+            
+            aws s3api put-bucket-versioning \
+              --bucket green-logistics-optimizer-state-storage-edelic \
+              --versioning-configuration Status=Enabled
+            
+            echo "Waiting for propagation..."
+            sleep 15
+          else
+            echo "Bucket already exists."
+          fi
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init -reconfigure
+        # We explicitly pass the backend config here to ensure it overrides any cached junk
+        run: |
+          terraform init \
+            -backend-config="bucket=green-logistics-optimizer-state-storage-edelic" \
+            -backend-config="key=global/s3/terraform.tfstate" \
+            -backend-config="region=eu-central-1" \
+            -reconfigure
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
