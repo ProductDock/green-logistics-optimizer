@@ -26,17 +26,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Ensure Backend Bucket Exists
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          # Create bucket if it doesn't exist, ignore error if it does
+          aws s3api create-bucket \
+            --bucket green-logistics-optimizer-state-storage-edelic \
+            --region eu-central-1 \
+            --create-bucket-configuration LocationConstraint=eu-central-1 || true
+          
+          # Enable versioning for state safety
+          aws s3api put-bucket-versioning \
+            --bucket green-logistics-optimizer-state-storage-edelic \
+            --versioning-configuration Status=Enabled || true
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init -reconfigure
-
-      - name: Terraform Plan
-        run: terraform plan -input=false
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve -input=false
