@@ -3,6 +3,8 @@
  * Simulated Weather Context Provider
  */
 export async function getWeatherContext(city: string) {
+  console.log("Get weather", new Date().toUTCString());
+  
   return {
     location: city,
     lat: 48.57,

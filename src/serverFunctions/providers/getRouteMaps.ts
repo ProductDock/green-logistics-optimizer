@@ -3,6 +3,8 @@
  * Simulated Mapping and Route Matrix Provider
  */
 export async function getRouteMaps(origin: string, destination: string) {
+  console.log("Get Route", new Date().toUTCString());
+  
   return {
     code: "Ok",
     durations: [[37800]], 

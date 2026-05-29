@@ -3,6 +3,8 @@
  * Simulated Carbon Intelligence Provider
  */
 export async function getCarbonTracking(origin: string, destination: string) {
+  console.log("Get Carbon", new Date().toUTCString());
+  
   return {
     activity_id: "freight_truck_heavy",
     origin: origin,
